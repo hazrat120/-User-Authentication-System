@@ -2,6 +2,6 @@
     session_start();
     session_unset();
     session_destroy();
-    header("Localtion: login.php");
+    header("Localtion: index.php");
     exit();
 ?>

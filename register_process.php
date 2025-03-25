@@ -1,5 +1,9 @@
 <?php
 require 'config.php';
+require 'vendor/autoload.php'; // Load Composer autoloader
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = trim($_POST['username']);
@@ -28,10 +32,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $stmt = $pdo->prepare("INSERT INTO users (username, email, password, token) VALUES (?, ?, ?, ?)");
     $stmt->execute([$username, $email, $hashedPassword, $token]);
 
-    // Send verification email (use PHPMailer in production)
-    $verifyLink = "http://yourdomain.com/verify.php?token=$token";
-    mail($email, "Verify Your Email", "Click here to verify: $verifyLink");
+    // Send verification email using PHPMailer
+    $mail = new PHPMailer(true);
 
-    echo "Registration successful! Check your email to verify.";
+    try {
+        // SMTP Configuration (Example for Gmail)
+        $mail->isSMTP();
+        $mail->Host = 'sandbox.smtp.mailtrap.io';
+        $mail->SMTPAuth = true;
+        $mail->Username = '68df252b9d3a9c'; // Your Gmail
+        $mail->Password = 'b73e67a0d9c796'; // Use App Password (2FA)
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port = 2525;
+
+        // Email content
+        $mail->setFrom('noreply@yourdomain.com', 'Your Site Name');
+        $mail->addAddress($email);
+        $mail->isHTML(true);
+        $mail->Subject = 'Verify Your Email';
+        $verifyLink = "http://localhost/PHP%20Learning/User-Authentication-System/verify.php?token=$token";
+        $mail->Body = "Click <a href='$verifyLink'>here</a> to verify your email.";
+
+        $mail->send();
+        echo "Registration successful! Check your email to verify.";
+    } catch (Exception $e) {
+        echo "Email could not be sent. Error: {$mail->ErrorInfo}";
+    }
 }
 ?>

@@ -41,34 +41,36 @@ if (isset($_GET['token'])) {
             // Show reset form
             ?>
             <!DOCTYPE html>
-            <html>
+            <html lang="en">
             <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <title>Reset Password</title>
-                <style>
-                    .container { max-width: 400px; margin: 50px auto; padding: 20px; }
-                    .error { color: red; }
-                    .success { color: green; }
-                </style>
+                <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
             </head>
-            <body>
-                <div class="container">
-                    <h2>Reset Password</h2>
+            <body class="d-flex justify-content-center align-items-center vh-100 bg-light">
+                <div class="card p-4 shadow" style="width: 350px;">
+                    <h2 class="text-center mb-3">Reset Password</h2>
                     <?php if (isset($_SESSION['error'])): ?>
-                        <div class="error"><?= $_SESSION['error'] ?></div>
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <?= $_SESSION['error'] ?>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
                         <?php unset($_SESSION['error']); ?>
                     <?php endif; ?>
                     <form method="POST">
-                        <div>
-                            <label>New Password:</label>
-                            <input type="password" name="password" required minlength="8">
+                        <div class="mb-3">
+                            <label class="form-label">New Password</label>
+                            <input type="password" name="password" class="form-control" required minlength="8">
                         </div>
-                        <div>
-                            <label>Confirm Password:</label>
-                            <input type="password" name="confirm_password" required minlength="8">
+                        <div class="mb-3">
+                            <label class="form-label">Confirm Password</label>
+                            <input type="password" name="confirm_password" class="form-control" required minlength="8">
                         </div>
-                        <button type="submit">Reset Password</button>
+                        <button type="submit" class="btn btn-primary w-100">Reset Password</button>
                     </form>
                 </div>
+                <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
             </body>
             </html>
             <?php
